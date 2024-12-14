@@ -23,11 +23,13 @@ export class CreateProductDto {
 
   @IsString()
   @MinLength(2)
-  slug: string;
+  @IsOptional()
+  slug?: string;
 
   @IsInt()
   @IsPositive()
-  stock: number;
+  @IsOptional()
+  stock?: number;
 
   @IsString({ each: true })
   sizes: string[];
