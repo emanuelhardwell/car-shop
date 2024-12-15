@@ -4,12 +4,15 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HandleError } from 'src/common/exceptions/handle-error';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+
+    private readonly handleError: HandleError,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
@@ -18,7 +21,7 @@ export class ProductsService {
 
       return product;
     } catch (error) {
-      console.log(error);
+      this.handleError.handleErrorService(error);
     }
   }
 
