@@ -27,8 +27,13 @@ export class ProductsService {
     }
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll() {
+    try {
+      const products = await this.productRepository.find();
+      return products;
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
   }
 
   findOne(id: number) {
