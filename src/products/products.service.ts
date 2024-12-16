@@ -13,7 +13,9 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
 
     private readonly handleError: HandleError,
-  ) {}
+  ) {
+    this.handleError.setServiceName('ProductsService');
+  }
   async create(createProductDto: CreateProductDto) {
     try {
       const product = this.productRepository.create(createProductDto);
