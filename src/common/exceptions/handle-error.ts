@@ -2,12 +2,19 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
 
 @Injectable()
 export class HandleError {
+  private logger: Logger;
+
+  setServiceName(serviceName: string) {
+    this.logger = new Logger(serviceName);
+  }
   handleErrorService(error: unknown) {
+    this.logger?.error(error);
     console.error(error);
 
     if (error instanceof QueryFailedError) {
