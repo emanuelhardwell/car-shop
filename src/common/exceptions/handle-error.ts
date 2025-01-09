@@ -31,7 +31,7 @@ export class HandleError {
     }
 
     if (error instanceof Error) {
-      throw new InternalServerErrorException(error.message);
+      throw error;
     }
 
     throw new InternalServerErrorException('An unexpected error occurred');
