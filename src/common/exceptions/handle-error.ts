@@ -18,7 +18,7 @@ export class HandleError {
     console.error(error);
 
     if (error instanceof QueryFailedError) {
-      const message = `PostgreSQL Error: ${error.message}`;
+      const message = `PostgreSQL Error: ${error.message} -- ${error.driverError?.detail}`;
       throw new BadRequestException(message);
     }
 
