@@ -32,14 +32,14 @@ export class Product {
   @Column('text')
   gender: string;
 
-  @Column("text", {
+  @Column('text', {
     array: true,
     default: [],
   })
   tags: string[];
 
   @OneToMany(() => ProductImage, (productImage) => productImage.product, {
-    cascade: true,
+    cascade: true, eager: true
   })
   images?: ProductImage[];
 
