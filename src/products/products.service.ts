@@ -45,7 +45,7 @@ export class ProductsService {
         take: limit,
         skip: offset,
       });
-      return products;
+      return products.map((product)=> ({ ...product, images: product.images.map((img=> img.url))}));
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
@@ -58,12 +58,13 @@ export class ProductsService {
       if (isUUID(term)) { 
         product = await this.productRepository.findOneBy({ id: term });
       } else {
-        const queryBuilder = this.productRepository.createQueryBuilder();
+        const queryBuilder = this.productRepository.createQueryBuilder("prod");
         product = await queryBuilder
-          .where('UPPER(title) := title or slug := slug', {
+          .where('UPPER(title) =:title or slug =:slug', {
             title: term.toLocaleUpperCase(),
             slug: term.toLocaleLowerCase(),
           })
+          .leftJoinAndSelect("prod.images", "prodImages")
           .getOne();
       }
 
