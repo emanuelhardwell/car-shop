@@ -78,6 +78,15 @@ export class ProductsService {
     }
   }
 
+  async findOneFlat(term: string){
+    try {
+      const product = await this.findOne(term);
+      return { ...product, images: product.images.map((img) => img.url) };
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
+  }
+
   async update(id: string, updateProductDto: UpdateProductDto) {
     try {
       const product = await this.productRepository.preload({
