@@ -31,7 +31,7 @@ export class ProductsService {
       });
       await this.productRepository.save(product);
 
-      return product;
+      return { ...product, images: this.flatImages(product) };
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
@@ -45,7 +45,10 @@ export class ProductsService {
         take: limit,
         skip: offset,
       });
-      return products.map((product)=> ({ ...product, images: product.images.map((img=> img.url))}));
+      return products.map((product) => ({
+        ...product,
+        images: this.flatImages(product),
+      }));
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
@@ -81,7 +84,15 @@ export class ProductsService {
   async findOneFlat(term: string){
     try {
       const product = await this.findOne(term);
-      return { ...product, images: product.images.map((img) => img.url) };
+      return { ...product, images: this.flatImages(product) };
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
+  }
+
+  flatImages(product: Product) {
+    try {
+      return product.images.map((img) => img.url);
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
