@@ -26,6 +26,10 @@ export class HandleError {
       throw new BadRequestException('Entity not found');
     }
 
+    if (error instanceof TypeError) {
+      throw new BadRequestException(error.message);
+    }
+
     if (typeof error === 'string') {
       throw new BadRequestException(error);
     }
