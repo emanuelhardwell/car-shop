@@ -59,16 +59,16 @@ export class ProductsService {
     try {
       let product: Product;
 
-      if (isUUID(term)) { 
+      if (isUUID(term)) {
         product = await this.productRepository.findOneBy({ id: term });
       } else {
-        const queryBuilder = this.productRepository.createQueryBuilder("prod");
+        const queryBuilder = this.productRepository.createQueryBuilder('prod');
         product = await queryBuilder
           .where('UPPER(title) =:title or slug =:slug', {
             title: term.toLocaleUpperCase(),
             slug: term.toLocaleLowerCase(),
           })
-          .leftJoinAndSelect("prod.images", "prodImages")
+          .leftJoinAndSelect('prod.images', 'prodImages')
           .getOne();
       }
 
@@ -82,7 +82,7 @@ export class ProductsService {
     }
   }
 
-  async findOneFlat(term: string){
+  async findOneFlat(term: string) {
     try {
       const product = await this.findOne(term);
       return { ...product, images: this.flatImages(product) };
@@ -139,6 +139,15 @@ export class ProductsService {
     try {
       const product = await this.findOne(id);
       await this.productRepository.remove(product);
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
+  }
+
+  async deleteAll() {
+    try {
+      const queryBuilder = this.productRepository.createQueryBuilder();
+      return await queryBuilder.delete().where({}).execute();
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
