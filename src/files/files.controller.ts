@@ -1,7 +1,10 @@
 import {
   BadRequestException,
   Controller,
+  Get,
+  Param,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -11,6 +14,7 @@ import { fileFilter } from './helpers/file-filter.helper';
 import { HandleError } from '../common/exceptions/handle-error';
 import { diskStorage } from 'multer';
 import { fileRename } from './helpers/file-rename.helper';
+import { Response } from 'express';
 
 @Controller('files')
 export class FilesController {
@@ -41,5 +45,11 @@ export class FilesController {
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
+  }
+
+  @Get('product/:id')
+  findFile(@Res() res: Response, @Param('id') id: string) {
+    const path = this.filesService.findFile(id);
+    res.sendFile(path);
   }
 }
