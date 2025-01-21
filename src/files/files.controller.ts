@@ -9,6 +9,8 @@ import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFilter } from './helpers/file-filter.helper';
 import { HandleError } from '../common/exceptions/handle-error';
+import { diskStorage } from 'multer';
+import { fileRename } from './helpers/file-rename.helper';
 
 @Controller('files')
 export class FilesController {
@@ -21,6 +23,11 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('file', {
       fileFilter: fileFilter,
+      // limits: { fileSize: 1000 }
+      storage: diskStorage({
+        destination: './static/products',
+        filename: fileRename,
+      }),
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -29,7 +36,8 @@ export class FilesController {
         throw new BadRequestException('No file provided');
       }
 
-      return this.filesService.uploadFile();
+      const secureUrl = file.filename;
+      return { secureUrl };
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
