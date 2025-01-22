@@ -15,12 +15,14 @@ import { HandleError } from '../common/exceptions/handle-error';
 import { diskStorage } from 'multer';
 import { fileRename } from './helpers/file-rename.helper';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('files')
 export class FilesController {
   constructor(
     private readonly filesService: FilesService,
     private readonly handleError: HandleError,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('product')
@@ -40,7 +42,7 @@ export class FilesController {
         throw new BadRequestException('No file provided');
       }
 
-      const secureUrl = file.filename;
+      const secureUrl = `${this.configService.get("HOST_API")}/v1/files/product/${file.filename}`;
       return { secureUrl };
     } catch (error) {
       this.handleError.handleErrorService(error);
