@@ -5,7 +5,7 @@ export const fileFilter = (
   file: Express.Multer.File,
   callback: Function,
 ) => {
-  const validatedExtensions = ['.png', '.jpg', '.jpeg', '.gif'];
+  const validatedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
   const extension = file.mimetype.split('/')[1];
 
   if (validatedExtensions.includes(extension)) return callback(null, true);
