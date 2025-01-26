@@ -5,6 +5,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUserDecorator } from './decorators/get-user.decorator';
 import { User } from './entities/user.entity';
+import { RawHeadersDecorator } from './decorators/raw-headers.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -22,10 +23,12 @@ export class AuthController {
   @Get('private')
   @UseGuards(AuthGuard())
   privateDefault(
-    @GetUserDecorator() user1: User,
-    @GetUserDecorator('email') user2: string,
+    @GetUserDecorator() user: User,
+    @GetUserDecorator('email') email: string,
+    @RawHeadersDecorator() rawHeaders: object,
+    @RawHeadersDecorator('authorization') header: string,
   ) {
     const res = this.authService.privateDefault();
-    return { ...res, user1, user2 };
+    return { ...res, user, email, rawHeaders, header };
   }
 }
