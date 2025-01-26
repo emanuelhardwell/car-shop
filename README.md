@@ -28,8 +28,38 @@
 
 ## Project setup
 
-```bash
-$ pnpm install
+1.- clone repository
+```
+git clone UrlRepository
+```
+
+2.- install dependencies
+```
+pnpm install
+```
+
+3.- install Nest CLI 
+```
+npm install -g @nestjs/cli
+```
+
+4.- raise PostgresDB 
+```
+docker-compose up -d
+```
+
+5.- rename file __.env.template__ to __.env__
+
+6.- fill yours envs in the file __.env__
+
+7.- run server in development mode
+```
+pnpm run start:dev
+```
+
+8.- execute endpoint of Seed
+```
+http://localhost:3000/api/v1/seed
 ```
 
 ## Compile and run the project
@@ -58,6 +88,3 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
