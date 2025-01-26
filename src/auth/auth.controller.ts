@@ -16,6 +16,7 @@ import { RawHeadersDecorator } from './decorators/raw-headers.decorator';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
 import { RoleProtected } from './decorators/role-protected.decorator';
 import { validRoles } from './enums/valid-roles';
+import { Auth } from './decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -56,6 +57,13 @@ export class AuthController {
   @RoleProtected(validRoles.superAdmin)
   @UseGuards(AuthGuard(), UserRoleGuard)
   privateWithCustomGuardAndDecorator(@GetUserDecorator() user: User) {
+    const res = this.authService.privateDefault();
+    return { ...res, user };
+  }
+
+  @Get('private4')
+  @Auth(validRoles.superAdmin)
+  privateWithAuthFullDecorator(@GetUserDecorator() user: User) {
     const res = this.authService.privateDefault();
     return { ...res, user };
   }
