@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUserDecorator } from './decorators/get-user.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +21,11 @@ export class AuthController {
 
   @Get('private')
   @UseGuards(AuthGuard())
-  privateDefault() {
-    return this.authService.privateDefault();
+  privateDefault(
+    @GetUserDecorator() user1: User,
+    @GetUserDecorator('email') user2: string,
+  ) {
+    const res = this.authService.privateDefault();
+    return { ...res, user1, user2 };
   }
 }
