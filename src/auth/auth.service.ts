@@ -60,7 +60,6 @@ export class AuthService {
           fullName: true,
         },
       });
-      console.log(user);
 
       if (!user) throw new UnauthorizedException('Credentials not valid');
       if (!user.isActice) throw new UnauthorizedException('User is inactive');
@@ -76,6 +75,14 @@ export class AuthService {
           fullName: user.fullName,
         }),
       };
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
+  }
+
+  privateDefault() {
+    try {
+      return { ok: true, message: 'Service is protected' };
     } catch (error) {
       this.handleError.handleErrorService(error);
     }
