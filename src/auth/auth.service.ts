@@ -87,4 +87,13 @@ export class AuthService {
       this.handleError.handleErrorService(error);
     }
   }
+
+  async deleteAll() {
+    try {
+      const queryBuilder = this.userRepository.createQueryBuilder();
+      await queryBuilder.delete().where({}).execute();
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
+  }
 }
