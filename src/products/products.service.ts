@@ -8,6 +8,7 @@ import { HandleError } from 'src/common/exceptions/handle-error';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { validate as isUUID } from 'uuid';
 import { ProductImage } from './entities/product-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -22,13 +23,14 @@ export class ProductsService {
   ) {
     this.handleError.setServiceName('ProductsService');
   }
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
     try {
       const product = this.productRepository.create({
         ...createProductDto,
         images: createProductDto.images.map((img) =>
           this.productImageRepository.create({ url: img }),
         ),
+        user,
       });
       await this.productRepository.save(product);
 
@@ -99,7 +101,7 @@ export class ProductsService {
     }
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
     const { images, ...toUpdate } = updateProductDto;
 
     const product = await this.productRepository.preload({
@@ -123,6 +125,7 @@ export class ProductsService {
         );
       }
 
+      product.user= user;
       await queryRunner.manager.save(product);
       await queryRunner.commitTransaction();
       await queryRunner.release();
