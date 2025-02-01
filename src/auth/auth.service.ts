@@ -96,4 +96,19 @@ export class AuthService {
       this.handleError.handleErrorService(error);
     }
   }
+
+  async checkAuthStatus(user: User) {
+    try {
+      return {
+        ...user,
+        token: this.getJwtToken({
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+        }),
+      };
+    } catch (error) {
+      this.handleError.handleErrorService(error);
+    }
+  }
 }
