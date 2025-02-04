@@ -12,10 +12,18 @@ export class MsgWebSocketGateway
 {
   constructor(private readonly msgWebSocketService: MsgWebSocketService) {}
   handleConnection(client: Socket, ...args: any[]) {
-    console.log(`Client connected : ${client.id} `);
-    console.log(args);
+    //console.log(`Client connected : ${client.id} `);
+    this.msgWebSocketService.handleConnection(client);
+    console.log(
+      'conectados: ' + this.msgWebSocketService.getClientsConnected(),
+    );
+    console.log('args: ' + args);
   }
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected : ${client.id} `);
+    //console.log(`Client disconnected : ${client.id} `);
+    this.msgWebSocketService.handleDisconnect(client.id);
+    console.log(
+      'conectados: ' + this.msgWebSocketService.getClientsConnected(),
+    );
   }
 }
