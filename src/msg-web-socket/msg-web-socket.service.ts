@@ -17,7 +17,7 @@ export class MsgWebSocketService {
     delete this.clientConnected[id];
   }
 
-  getClientsConnected(): number {
-    return Object.keys(this.clientConnected).length;
+  getClientsConnected(): string[] {
+    return Object.keys(this.clientConnected);
   }
 }
