@@ -42,22 +42,22 @@ export class MsgWebSocketGateway
   }
 
   @SubscribeMessage('message_client')
-  messageClient(socket: Socket, data: messageDto) {
-    console.log(`Received message from ${socket.id}: ${data.message}`);
+  messageClient(client: Socket, payload: messageDto) {
+    console.log(`Received message from ${client.id}: ${payload.message}`);
 
     //! Private communication, directed to the issuer(emisor).
-    // socket.emit('message_server', { id: data.id, message: data.message });
+    // client.emit('message_server', { id: data.id, message: data.message });
 
     //! Public communication, directed to everyone else, excluding the issuer
-    // socket.broadcast.emit('message_server', {
+    // client.broadcast.emit('message_server', {
     //   id: data.id,
     //   message: data.message,
     // });
 
     //! Send the message to all
     this.wss.emit('message_server', {
-      id: data.id,
-      message: data.message,
+      fullname: payload.fullname,
+      message: payload.message,
     });
   }
 }
