@@ -1,5 +1,5 @@
 export class messageDto {
-  id: string;
+  fullname: string;
 
   message: string;
 }
