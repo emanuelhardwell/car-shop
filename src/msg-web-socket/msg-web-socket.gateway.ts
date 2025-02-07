@@ -8,16 +8,33 @@ import {
 import { MsgWebSocketService } from './msg-web-socket.service';
 import { Server, Socket } from 'socket.io';
 import { messageDto } from './dto/message.dto';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 
 @WebSocketGateway({ cors: true })
 export class MsgWebSocketGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly msgWebSocketService: MsgWebSocketService) {}
+  constructor(
+    private readonly msgWebSocketService: MsgWebSocketService,
+    private readonly jwtservice: JwtService,
+  ) {}
 
   @WebSocketServer() wss: Server;
 
   handleConnection(client: Socket, ...args: any[]) {
+    const token = client.handshake.headers?.authentication as string;
+
+    try {
+      const payload: JwtPayload = this.jwtservice.verify(token);
+
+      console.log(payload);
+    } catch (error) {
+      //throw new WsException('Invalid credentials!');
+      client.disconnect();
+      return;
+    }
+
     //console.log(`Client connected : ${client.id} `);
     this.msgWebSocketService.handleConnection(client);
     // console.log(
