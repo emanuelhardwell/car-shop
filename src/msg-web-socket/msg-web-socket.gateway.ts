@@ -22,21 +22,23 @@ export class MsgWebSocketGateway
 
   @WebSocketServer() wss: Server;
 
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
     const token = client.handshake.headers?.authentication as string;
+    let payload: JwtPayload;
 
     try {
-      const payload: JwtPayload = this.jwtservice.verify(token);
-
-      console.log(payload);
+      payload = this.jwtservice.verify(token);
+      //console.log(payload);
+      this.msgWebSocketService.verifyRepeatUser(payload.id);
+      await this.msgWebSocketService.handleConnection(client, payload.id);
     } catch (error) {
       //throw new WsException('Invalid credentials!');
+      console.log('ERROR: ', error.message);
       client.disconnect();
       return;
     }
 
     //console.log(`Client connected : ${client.id} `);
-    this.msgWebSocketService.handleConnection(client);
     // console.log(
     //   'conectados: ' + this.msgWebSocketService.getClientsConnected(),
     // );
@@ -73,7 +75,7 @@ export class MsgWebSocketGateway
 
     //! Send the message to all
     this.wss.emit('message_server', {
-      fullname: payload.fullname,
+      fullname: this.msgWebSocketService.getFullName(client.id),
       message: payload.message,
     });
   }
